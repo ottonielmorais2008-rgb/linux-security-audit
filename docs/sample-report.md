@@ -1,7 +1,7 @@
 # Linux security audit report
 
-- Host: `grok-bot-vm-511282481`
-- Generated (UTC): 2026-11-06T10:21:02Z
+- Host: `runnervmwuk1x`
+- Generated (UTC): 2026-11-06T10:21:42Z
 - Tool: linux-security-audit v1.0.0
 - Mode: **read-only** (no system changes)
 
@@ -9,21 +9,21 @@
 
 | Severity | Count |
 |----------|------:|
-| PASS | 5 |
+| PASS | 6 |
 | INFO | 4 |
 | WARN | 2 |
 | FAIL | 0 |
-| SKIP | 2 |
+| SKIP | 1 |
 
 ## Findings
 
 ### [INFO] Host identity
-Hostname: `grok-bot-vm-511282481`
-User: `box` (uid 1000)
-OS: Debian GNU/Linux 13 (trixie)
-Kernel: 6.12.94+
+Hostname: `runnervmwuk1x`
+User: `runner` (uid 1001)
+OS: Ubuntu 26.04.1 LTS
+Kernel: 7.0.0-1019-azure
 Audit version: 1.0.0
-Started (UTC): 2026-11-06T10:21:02Z
+Started (UTC): 2026-11-06T10:21:40Z
 Root privileges: no
 
 ### [PASS] UID 0 accounts
@@ -35,8 +35,14 @@ Cannot read /etc/shadow (needs root). Skipped without elevating privileges.
 ### [PASS] Permissions on /etc/shadow
 Mode `640`, owner `root:shadow`.
 
-### [SKIP] SSH daemon configuration
-Cannot read /etc/ssh/sshd_config.
+### [PASS] SSH daemon configuration
+Effective values from readable sshd_config (+ drop-ins if present):
+- PermitRootLogin: `<default/unset>`
+- PasswordAuthentication: `no`
+- PermitEmptyPasswords: `<default/unset>`
+- ChallengeResponseAuthentication: `<default/unset>`
+
+No high-risk SSH settings detected from readable config.
 
 ### [PASS] SSH private key permissions
 No overly open private key modes found among paths that could be inspected.
@@ -50,50 +56,35 @@ No world-writable regular files found under /etc /bin /sbin /usr/bin /usr/sbin /
 ### [WARN] Unusual SUID/SGID binaries
 Binaries with SUID/SGID not on the small expected allow-list (capped):
 ```
-/usr/bin/chage (2755 root:shadow)
+/usr/bin/newuidmap (4755 root:root)
+/usr/bin/sudo.ws (4755 root:root)
 /usr/bin/expiry (2755 root:shadow)
+/usr/bin/chage (2755 root:shadow)
+/usr/bin/newgidmap (4755 root:root)
+/usr/sbin/mount.cifs (4755 root:root)
+/usr/sbin/pam_extrausers_chkpwd (2755 root:shadow)
 ```
 Review these; many are legitimate. This audit does not remove or change them.
 
 ### [INFO] Listening ports
 Current listening sockets (read-only snapshot, capped):
 ```
-tcp LISTEN 0      100      0.0.0.0:6081  0.0.0.0:*
-tcp LISTEN 0      100      0.0.0.0:6080  0.0.0.0:*
-tcp LISTEN 0      10     127.0.0.1:9223  0.0.0.0:*
-tcp LISTEN 0      128    127.0.0.1:8791  0.0.0.0:*
-tcp LISTEN 0      511      0.0.0.0:1339  0.0.0.0:*
-tcp LISTEN 0      511      0.0.0.0:1340  0.0.0.0:*
-tcp LISTEN 0      128      0.0.0.0:26500 0.0.0.0:*
-tcp LISTEN 0      128      0.0.0.0:50052 0.0.0.0:*
-tcp LISTEN 0      128      0.0.0.0:8790  0.0.0.0:*
-tcp LISTEN 0      511    127.0.0.1:46254 0.0.0.0:*
-tcp LISTEN 0      32     127.0.0.1:5909  0.0.0.0:*
-tcp LISTEN 0      32     127.0.0.1:5908  0.0.0.0:*
-tcp LISTEN 0      32     127.0.0.1:5910  0.0.0.0:*
-tcp LISTEN 0      32     127.0.0.1:5900  0.0.0.0:*
-tcp LISTEN 0      32     127.0.0.1:5902  0.0.0.0:*
-tcp LISTEN 0      5        0.0.0.0:2375  0.0.0.0:*
-tcp LISTEN 0      511            *:13602       *:*
-tcp LISTEN 0      511            *:13610       *:*
-tcp LISTEN 0      511            *:13609       *:*
-tcp LISTEN 0      511            *:13608       *:*
-tcp LISTEN 0      511            *:14002       *:*
-tcp LISTEN 0      511            *:14010       *:*
-tcp LISTEN 0      511            *:14009       *:*
-tcp LISTEN 0      511            *:14008       *:*
-tcp LISTEN 0      511            *:1338        *:*
-tcp LISTEN 0      511            *:1337        *:*
-tcp LISTEN 0      32         [::1]:5908     [::]:*
-tcp LISTEN 0      32         [::1]:5909     [::]:*
-tcp LISTEN 0      32         [::1]:5910     [::]:*
-tcp LISTEN 0      32         [::1]:5900     [::]:*
-tcp LISTEN 0      32         [::1]:5902     [::]:*
+udp UNCONN 0      0          127.0.0.54:53  0.0.0.0:*
+udp UNCONN 0      0       127.0.0.53%lo:53  0.0.0.0:*
+udp UNCONN 0      0      10.1.1.68%eth0:68  0.0.0.0:*
+udp UNCONN 0      0           127.0.0.1:323 0.0.0.0:*
+udp UNCONN 0      0               [::1]:323    [::]:*
+tcp LISTEN 0      4096       127.0.0.54:53  0.0.0.0:*
+tcp LISTEN 0      4096          0.0.0.0:22  0.0.0.0:*
+tcp LISTEN 0      4096    127.0.0.53%lo:53  0.0.0.0:*
+tcp LISTEN 0      4096             [::]:22     [::]:*
 ```
 
 ### [INFO] Firewall status (information only)
-UFW: not installed (or not in PATH).
+UFW: status unavailable
 
+iptables: present but rules not readable without privileges (not elevating).
+nft: available (ruleset not readable without privileges).
 This check never enables, disables, or changes firewall rules.
 
 ### [WARN] Passwordless sudo
@@ -104,9 +95,10 @@ Current user can run passwordless sudo (`sudo -n true` succeeded).
 
 ### [INFO] Updates and unattended-upgrades
 APT periodic stamps present under /var/lib/apt/periodic.
+Last successful apt update stamp: 2026-11-01 21:35:15.970964632 +0000
 
 No readable unattended-upgrades auto config found.
-Simulated pending upgrades from local cache (no refresh, no install): 0
+Simulated pending upgrades from local cache (no refresh, no install): 1
 This check never runs `apt update/upgrade/install`.
 
 ## Disclaimer

@@ -65,8 +65,8 @@ CI (GitHub Actions on `ubuntu-latest`, `actions/checkout@v5`, no secrets) runs t
 ## How it was tested
 
 - Unit and safety tests via `tests/run-tests.sh` (SSH config parser, mutating-command refusal, report generation, refusal to write under `/etc`).
-- Full audit run on the development host and again on the GitHub Actions `ubuntu-latest` runner; the published [sample report](docs/sample-report.md) comes from a real run (see the host/OS lines inside the report).
-- No full virtual machine was used for this project.
+- Full audit run on the GitHub Actions `ubuntu-latest` runner (the published [sample report](docs/sample-report.md) is that run; see the host/OS lines inside the file).
+- Smoke-tested on a Debian 13 development host as well. No full virtual machine was used for this project.
 
 ## Risks and honesty
 
