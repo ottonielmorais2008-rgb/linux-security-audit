@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run unit / safety tests (no root)
+        run: bash tests/run-tests.sh
+
+      - name: Run read-only audit on the runner
+        run: |
+          bash audit.sh --report docs/sample-report.md | tee audit-console.txt
+          test -f docs/sample-report.md
+          grep -qi 'read-only' docs/sample-report.md
+
+      - name: Upload sample report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-report
+          path: docs/sample-report.md
